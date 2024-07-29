@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+
+    <script>
+        const search_url= 'https://zipcloud.ibsnet.c.jp/api/search';
+
+        function search(){
+            let zip= $('#zip_input').val();
+            zip = zip.replace('-', '');
+
+            $.ajax(
+                {
+                    url: search_url,
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        zipcode: zip
+                    }
+                }
+            ).done(
+                function(response){
+                    const results = response.results;
+
+                    if(results == null || results.length == 0){
+                        $('#result_cell').css('color', 'red');
+                        $('#result_cell').html(response.message);
+                    }else{
+                        const element = results[0];
+                        const address = element.adress1 + elemet.adress2
+                                      + element.adress3;
+                        $('#result_cell').css('color','black');
+                        $('#result_cell').html(address);
+                                    }
+                }
+            )
+        }
+        function initialise(){
+            $('#search_button').click(search);
+        }$(window).ready(initialise);
+    </script>
+</head>
+<body>
+<table>
+    <tr>
+        <th>
+            郵便番号
+        </th>
+        <td><input id="zip_input" type="text"></td>
+        <td><button id="search_button">検索</button></td>
+    </tr>
+</table>
+<div id="result_cell"></div>
+</body>
+</html>
